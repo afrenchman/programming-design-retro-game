@@ -3,6 +3,7 @@ import sys
 import subprocess
 import os
 import Donkey_Kong.game_mk
+import frogger.frogger
 
 # Inicialización de Pygame
 pygame.init()
@@ -119,8 +120,7 @@ def handle_input():
             if joystick.get_button(0):  # El botón A por defecto
                 print(f"Game {selected_index + 1} selected")
                 if selected_index == 0:
-                    game_path = os.path.join(os.path.dirname(__file__),  'frogger', 'frogger.py')
-                    subprocess.Popen(['python', game_path])
+                    frogger.frogger.run_frogger()
                 elif selected_index == 1:
                     Donkey_Kong.game_mk.run_mk()
                 elif selected_index == 2:
