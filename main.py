@@ -130,9 +130,7 @@ def handle_input():
                     game_path = os.path.join(os.path.dirname(__file__),  'FinalContra', 'main.py')
                     subprocess.Popen(['python', game_path])
                 
-                if selected_index != 1:
-                    pygame.quit()
-                    sys.exit()
+
 
 # Ciclo principal
 def main():

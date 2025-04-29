@@ -18,7 +18,7 @@ def run_frogger():
     menu_font = pygame.font.SysFont(font_name, 20)
 
 
-    screen = pygame.display.set_mode((1550,800), 0, 32)
+    screen = pygame.display.set_mode((1920,1080), 0, 32)
 
 
     if pygame.joystick.get_count() > 0:
@@ -675,19 +675,26 @@ def run_frogger():
     trilha_sound.play(-1)
     text_info = menu_font.render(('Press any button to start!'),1,(0,0,0))
     gameInit = 0
+    run= True
 
-    while gameInit == 0:
+    while run and gameInit == 0:
         for event in pygame.event.get():
             if event.type == QUIT:
                 exit()
 
-            if event.type == pygame.JOYBUTTONDOWN:  # Cualquier botón del joystick
-                gameInit = 1  # Iniciar el juego    
+            if event.type == pygame.JOYBUTTONDOWN:
+                if joystick.get_button(2):  # START
+                    run = False  # Vuelve al menú principal
+                    return
+                else:
+                    gameInit = 1  # Cualquier otro botón inicia el juego   
             
             if event.type == pygame.JOYHATMOTION:
                 hat_x, hat_y = event.value
                 if hat_y == 1 or hat_y == -1 or hat_x == 1 or hat_x == -1:
                     gameInit = 1
+            
+
 
         # Centrar el fondo horizontalmente, mantenerlo arriba
         bg_rect = background.get_rect()
@@ -707,8 +714,8 @@ def run_frogger():
         pygame.display.update()
 
 
-
-    while True:
+    run = True
+    while run:
         gameInit = 1
         game = Game(3, 1)
         key_up = 1
@@ -726,10 +733,15 @@ def run_frogger():
         pressed_keys = 0
         key_pressed = 0
 
-        while frog.lives > 0:
+        while run and frog.lives > 0:
             for event in pygame.event.get():
                 if event.type == QUIT:
                     exit()
+
+                if event.type == pygame.JOYBUTTONDOWN:
+                    if joystick.get_button(2):  # Botón START
+                        run = False  # Vuelve al menú principal
+                        return
 
                 # Detectar si el D-pad del mando se mueve
                 if event.type == pygame.JOYHATMOTION:
@@ -817,14 +829,19 @@ def run_frogger():
         joystick = pygame.joystick.Joystick(0)
         joystick.init()
 
-        while gameInit == 1:
+        while run and gameInit == 1:
             for event in pygame.event.get():
                 if event.type == QUIT:
                     exit()
 
+
+
             # Verificar si el botón A (generalmente el 0) es presionado
             if joystick.get_button(0):  # El botón A por defecto
                 gameInit = 0  # Reiniciar el juego
+            elif joystick.get_button(2):  # Botón START
+                run = False
+                return
 
             # Dibujar la pantalla de "GAME OVER"
             screen.blit(background, (offset_x, 0))
