@@ -48,12 +48,12 @@ def import_level(i):
     return ladders, platforms
 
 def run_mk():
-    USE_GAME_SOUND = False
+    USE_GAME_SOUND = True
     USE_GAME_CONTROLLER = True
     
     if USE_GAME_SOUND:
         pygame.mixer.init()
-        music = pygame.mixer.music.load(os.path.join('assets/Sound/', 'bg.mp3'))
+        music = pygame.mixer.music.load(os.path.join(current_dir + '/assets/Sound/bg.mp3'))
         pygame.mixer.music.play(-1)
 
     if USE_GAME_CONTROLLER:
@@ -74,13 +74,17 @@ def run_mk():
     ##################################################
     # Screen Size Info
     info = pygame.display.Info() 
-    screen_width, screen_height = info.current_w, info.current_h
+    # screen_width, screen_height = info.current_w, info.current_h
+    screen_width = 1920
+    screen_height = 1080
+    dk_pic_x = 1250
+    dk_pic_y = 50
 
     # Calculating Game Screen Size. Aspect Ratio 4 : 3
     height_percent = screen_height // 10
     window_width, window_height = (screen_height - height_percent) * ASPECT_RATIO[0] // ASPECT_RATIO[1] , screen_height - height_percent
     pygame.display.set_caption('Donkey Kong Jose!')
-    screen = pygame.display.set_mode([window_width, window_height])
+    screen = pygame.display.set_mode([screen_width, screen_height])
 
     ##################################################
     #             GAME GLOBAL VARIABLES
@@ -150,6 +154,8 @@ def run_mk():
                                             (2.5 * section_width, 3.5 * section_height))
     fireball = pygame.transform.scale(pygame.image.load(current_dir + '/assets/images/Fireball.png'),
                                     (1.5 * section_width, 2 * section_height))
+    scale_factor = 2.6
+    dk_pic = pygame.transform.scale(pygame.image.load(current_dir + '/assets/images/Donkey_Kong_flier.jpg'), (scale_factor*250, scale_factor*323))
 
     def get_row_position(i):
         return window_height - 2 * section_height - 4 * (i - 1) * section_height
@@ -521,6 +527,9 @@ def run_mk():
     all_hammers = [[4, get_row_position(6) + 8*slope], [4, get_row_position(4)+ 5*slope]]
 
     ##################################################
+    
+    def draw_dk_pic():
+        screen.blit(dk_pic, (dk_pic_x, dk_pic_y))
 
     def draw_screen():
         # Drawing the platforms
@@ -669,6 +678,7 @@ def run_mk():
     run = True
     while run:
         screen.fill('black')
+        draw_dk_pic()
         timer.tick(FPS)
 
         if bonus_counter < bonus_counter_max:
@@ -752,6 +762,8 @@ def run_mk():
                         mario.y_change = -6
                     if button == 2:
                         run = False
+                        if USE_GAME_SOUND:
+                            pygame.mixer.music.stop()
                 if event.type == pygame.JOYBUTTONUP:
                     button = event.button
                     print(f"Button {button} released")
