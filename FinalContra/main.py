@@ -282,12 +282,11 @@ class Game:
 		menu_y = (HEIGHT - ss_background.get_height()) // 2
 
 		# Animation parameters
-		animation_speed = 15
+		animation_speed = 8
 		animation_complete = False
 
-		# Wait until animation is complete before accepting input
+		# Slide-in animation
 		while not animation_complete:
-			# Clear screen
 			self.screen.fill(BLACK)
 
 			# Update menu position
@@ -298,22 +297,37 @@ class Game:
 					animation_complete = True
 					menu_sound.play()
 
-			# Draw menu at current position
+			# Draw menu
 			self.screen.blit(ss_background, (menu_x, menu_y))
 			pygame.display.flip()
 			self.clock.tick(FPS)
 
-			# Process events but ignore input during animation
+			# Exit handling
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					pygame.quit()
 					quit()
 
-		# Now wait for user input
+		# Blinking image setup
 		waiting_for_start = True
+		blink_visible = True
+		last_blink_time = pygame.time.get_ticks()
+		blink_interval = 200  # milliseconds
+
 		while waiting_for_start:
 			self.screen.blit(ss_background, (target_x, menu_y))
+
+			# Blinking logic
+			current_time = pygame.time.get_ticks()
+			if current_time - last_blink_time > blink_interval:
+				blink_visible = not blink_visible
+				last_blink_time = current_time
+
+			if blink_visible:
+				self.screen.blit(ss_press_play, (350, 700))
+
 			pygame.display.update()
+
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					waiting_for_start = False
@@ -322,8 +336,12 @@ class Game:
 				if event.type == pygame.JOYBUTTONDOWN:
 					if event.button == 0:
 						waiting_for_start = False
+						menu_sound.stop()
+						game_sound.play()
 
 	def show_game_over_screen(self):
+		game_sound.stop()
+		over_sound.play()
 		waiting_for_die = True
 		joystick_connected = pygame.joystick.get_count() > 0
 
@@ -333,6 +351,8 @@ class Game:
 			for event in pygame.event.get():
 				if joystick_connected and event.type == pygame.JOYBUTTONDOWN:
 					if event.button == 1:
+						over_sound.stop()
+						game_sound.play()
 						return "restart"
 					if event.button == 0:
 						self.running = False
@@ -351,7 +371,6 @@ gamer.show_start_screen()
 gamer.running = True
 
 while gamer.running:
-	# pygame.mixer.music.play(loops = -1)
 	# init player
 	p = Player(gamer)
 	gamer.reinit()
