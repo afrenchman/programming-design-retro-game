@@ -531,11 +531,11 @@ class Player(pygame.sprite.Sprite):
 
         # Determine the state based on the analog stick direction
         if right_y < -threshold:  # Stick is facing all the way up
-            self.up = False
-            self.down = True
-        elif right_y > threshold:  # Stick is facing all the way down
             self.up = True
             self.down = False
+        elif right_y > threshold:  # Stick is facing all the way down
+            self.up = False
+            self.down = True
         else:
             self.up = False
             self.down = False
@@ -1224,10 +1224,11 @@ def run_fc():
 			# Blinking image setup
 			waiting_for_start = True
 			blink_visible = True
+			run = True
 			last_blink_time = pygame.time.get_ticks()
 			blink_interval = 200  # milliseconds
 
-			while waiting_for_start:
+			while waiting_for_start and run:
 				self.screen.blit(ss_background, (target_x, menu_y))
 
 				# Blinking logic
@@ -1258,9 +1259,10 @@ def run_fc():
 			game_sound.stop()
 			over_sound.play()
 			waiting_for_die = True
+			run = True
 			joystick_connected = pygame.joystick.get_count() > 0
 
-			while waiting_for_die:
+			while waiting_for_die and run:
 				self.screen.blit(game_over,game_over.get_rect())
 				pygame.display.update()
 				for event in pygame.event.get():
@@ -1271,8 +1273,8 @@ def run_fc():
 							return "restart"
 						if event.button == 0:
 							self.running = False
-							pygame.quit()
-							quit()
+							run = False
+							return
 
 			if not self.bosses:
 				text_to_display = "STAGE CLEAR ("+str(int(self.time/FPS))+" s)"
