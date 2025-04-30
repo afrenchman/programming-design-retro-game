@@ -535,11 +535,11 @@ class Player(pygame.sprite.Sprite):
 
         # Determine the state based on the analog stick direction
         if right_y < -threshold:  # Stick is facing all the way up
-            self.up = True
-            self.down = False
-        elif right_y > threshold:  # Stick is facing all the way down
             self.up = False
             self.down = True
+        elif right_y > threshold:  # Stick is facing all the way down
+            self.up = True
+            self.down = False
         else:
             self.up = False
             self.down = False
