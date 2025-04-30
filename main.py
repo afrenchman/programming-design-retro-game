@@ -5,6 +5,8 @@ import os
 import Donkey_Kong.game_mk
 import frogger.frogger
 import Tetris.main
+import FinalContra.game
+
 
 # Inicialización de Pygame
 pygame.init()
@@ -127,12 +129,8 @@ def handle_input():
                 elif selected_index == 2:
                     Tetris.main.tetris_play()
                 elif selected_index == 3:
-                    game_path = os.path.join(os.path.dirname(__file__),  'FinalContra', 'main.py')
-                    subprocess.Popen(['python', game_path])
+                    FinalContra.game.run_fc()
                 
-                if selected_index != 1:
-                    pygame.quit()
-                    sys.exit()
 
 # Ciclo principal
 def main():
