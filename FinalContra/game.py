@@ -1,3 +1,7 @@
+
+# THIS .py FILE COMBINES ALL THE CLASSES INTO ONE FOR SYSTEM INTEGRATION
+# FOR BETTER READABILITY, RUN main.py
+
 import os
 import random
 import sys
