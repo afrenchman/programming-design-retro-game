@@ -10,5 +10,7 @@ Game | Contributor
 Donkey Kong | jorozcog05
 Contra NES | afrenchman
 Tetris | jennasannguyen
-Frogger | koletix
+Frogger | Said Castro Ortiz (koletix)
+
+To run this games >>python main.py
 
