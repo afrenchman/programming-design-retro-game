@@ -97,13 +97,13 @@ class Game:
 
     def draw(self, screen):
         self.grid.draw(screen)
-        self.current_block.draw(screen, 450, 11)
+        self.current_block.draw(screen, 600, 170)
 
         if self.next_block.id == 3:
-            self.next_block.draw(screen, 861, 270)
+            self.next_block.draw(screen, 1111, 465)
         elif self.next_block.id == 4:
-            self.next_block.draw(screen, 861, 250)
+            self.next_block.draw(screen, 1111, 445)
         else:   
-            self.next_block.draw(screen, 879, 250)
+            self.next_block.draw(screen, 1129, 445)
 
     
