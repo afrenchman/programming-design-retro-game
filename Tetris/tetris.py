@@ -1,7 +1,7 @@
 import pygame,sys
 import random
 import os
-import main 
+
 
 pygame.init()
 
@@ -355,8 +355,6 @@ def tetris_play():
     def get_font(size): 
         return pygame.font.Font(current_dir + "/assets/font.ttf", size)
 	
-    run = True
-
     def easy():
         score_surface = get_font(17).render("Score", True, Colors.white)
         next_surface = get_font(17).render("Next", True, Colors.white)
@@ -376,7 +374,7 @@ def tetris_play():
 
         selected_option = 0  # 0 = Start Over, 1 = Quit
 
-        while run:                                  
+        while True:                                  
             mouse_pos = pygame.mouse.get_pos()
             screen.fill(Colors.dark_blue)
             screen.blit(score_surface, (1243,160,50,50))
@@ -478,7 +476,7 @@ def tetris_play():
 
         selected_option = 0  # 0 = Start Over, 1 = Quit
 
-        while run:                                  
+        while True:                                  
             mouse_pos = pygame.mouse.get_pos()
             screen.fill(Colors.dark_blue)
             screen.blit(score_surface, (1243,160,50,50))
@@ -580,7 +578,7 @@ def tetris_play():
 
         selected_option = 0  # 0 = Start Over, 1 = Quit
 
-        while run:                                  
+        while True:                                  
             mouse_pos = pygame.mouse.get_pos()
             screen.fill(Colors.dark_blue)
             screen.blit(score_surface, (1243,160,50,50))
@@ -667,7 +665,7 @@ def tetris_play():
         selected_index = 0  # 0 = EASY, 1 = MEDIUM, 2 = HARD, 3 = EXIT
         options = ["EASY", "MEDIUM", "HARD", "EXIT"]
 
-        while run:
+        while True:
             screen.blit(BG, (0, 0))
             menu_surface = get_font(120).render("TETRIS", True, "#b68f40")
             menu_rect = menu_surface.get_rect(center=(950, 200))
@@ -727,8 +725,8 @@ def tetris_play():
                         elif selected_index == 2:
                             hard()
                         elif selected_index == 3:
-                            run = False
-                            main.main()
+                            pygame.quit()
+                            sys.exit()
 
             pygame.display.update()
 
