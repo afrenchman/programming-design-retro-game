@@ -10,8 +10,8 @@ A replica of the original 1987 NES Contra video game by Konami.
 
 Key | Action
 ---|---
-LEFT_STICK_LEFT | Move Left
-LEFT_STICK_RIGHT | Move Right
+LEFT_STICK_LEFT or D-PAD _LEFT | Move Left
+LEFT_STICK_RIGHT or D-PAD_RIGHT | Move Right
 Y Button | Drop to a lower platform
 A Button | Jump
 RIGHT_STICK + B Button | Shoots in the direction determined by the right stick direction
