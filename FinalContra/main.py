@@ -2,13 +2,12 @@ import os
 import random
 import sys
 import pygame
-
+from settings import *
+from sprites import *
+from camera import *
+from graphics import *
 
 def run_fc():
-	from settings import *
-	from sprites import *
-	from camera import *
-	from graphics import *
 	class Game:
 		def __init__(self):
 			# Initialize
