@@ -1,1 +1,7 @@
-# working code
+# Overview
+
+This entry of games part of Group 3 Retro Game Replica Design project worked over Spring 2025 Semester
+
+The goal for this group was for each individual to collectively recreate a retro game dated before the 21st century 
+and incorporate a Raspberry Pi microcontroller board running Ubuntu Linux for system integration.
+
