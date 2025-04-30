@@ -274,9 +274,6 @@ class Game:
         else:   
             self.next_block.draw(screen, 1129, 445)
 
-import pygame
-from colors import Colors
-
 class Grid:
     def __init__(self):
         self.num_rows = 20
