@@ -10,31 +10,23 @@ A replica of the original 1987 NES Contra video game by Konami.
 
 Key | Action
 ---|---
-A | Move Left
-D | Move Right
-S | Drop to a lower platform
-SPACE | Jump
-Left Mouse Button | Shoots in the direction determined by the mouse position
-Right Mouse Button |Dash
-Mouse Move | Direction of shooting
+LEFT_STICK_LEFT | Move Left
+LEFT_STICK_RIGHT | Move Right
+Y Button | Drop to a lower platform
+A Button | Jump
+RIGHT_STICK + B Button | Shoots in the direction determined by the right stick direction
+X Button | Reset Key
 
 ## Powerups
 
 Powerup | Effect
 ---|---
-F*WIP*| Resets cooldown of Dash
-B *WIP*| +1 Health
-Bird *WIP*| (Powerdown). Causes the player to drop down if taken when on a platform
+B | +1 Health
+Bird | (Powerdown). Causes the player to drop down if taken when on a platform
 
 ## Next Plan of Action
 
-* Complete and finalize Stage 1 Environments
-* Enhance Enemy Logistics
-* Proper Cutscenes & Hard Control Schemes
-* Develop game states
-* Create scoreboard
-* **Finalize Sprites** <-- *Biggest Pain*
-
+* Nothing as of the moment... (Completed Game)
 
 ## Assets
 
