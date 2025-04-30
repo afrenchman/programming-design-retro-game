@@ -8,7 +8,7 @@ from camera import *
 from graphics import *
 
 class Game:
-	def __init__(self):		
+	def __init__(self):
 		# Initialize
 		size = width, height = 600, 480
 		if "-f" in sys.argv[1:]:
@@ -17,8 +17,18 @@ class Game:
 			self.screen = screen
 		pygame.display.set_caption(TITLE)
 		self.clock = pygame.time.Clock()
+		self.joystick = None
+		self.init_joystick()
 		self.running = True
 		self.soldierTimer = SOLDIER_SPAWN_TIMER
+		self.joystick = None
+		pygame.joystick.init()
+		if pygame.joystick.get_count() > 0:
+			self.joystick = pygame.joystick.Joystick(0)
+			self.joystick.init()
+			print(f"Joystick connected: {self.joystick.get_name()}")
+		else:
+			print("No joystick detected - using keyboard controls")
 		self.reinit()
 
 	def reinit(self):
@@ -39,6 +49,13 @@ class Game:
 		self.powerupTimer = POWERUP_TIME
 		self.blinkRetract = BLINK_RETRACT
 		self.time = 0
+
+	def init_joystick(self):
+		pygame.joystick.init()
+		if pygame.joystick.get_count() > 0:
+			self.joystick = pygame.joystick.Joystick(0)
+			self.joystick.init()
+			print(f"Joystick detected: {self.joystick.get_name()}")
 
 	def new(self):
 		self.reinit()
@@ -81,7 +98,7 @@ class Game:
 		# Check if player fell off screen
 		if p.rect.top > HEIGHT or p.rect.x < 0:
 			p.die()
-			self.deathAnim(p)		
+			self.deathAnim(p)
 			self.playing = False
 		# Check if any enemy dies
 		h1 = pygame.sprite.groupcollide(gamer.bullets,gamer.snipers,True,True)
@@ -150,7 +167,7 @@ class Game:
 		# Jump on platform only while falling
 		if p.vel.y > 0 and p.collisions:
 			if hits:
-				p.pos.y = hits[0].defaulty 
+				p.pos.y = hits[0].defaulty
 				p.stopJumping()
 				p.vel.y = 0
 				p.canJump = True
@@ -159,6 +176,31 @@ class Game:
 			if hits :
 				e.pos.y = hits[0].defaulty
 				e.vel.y = 0
+
+		# Handle continuous joystick input
+		if self.joystick and not p.dead:
+			axis_0 = self.joystick.get_axis(0)
+			hat_x, _ = self.joystick.get_hat(0)
+
+			# Prioritize analog stick if moved
+			if abs(axis_0) > 0.5:
+				if axis_0 < 0:
+					p.move_left()
+				else:
+					p.move_right()
+			# D-Pad support
+			elif hat_x != 0:
+				if hat_x < 0:
+					p.move_left()
+				else:
+					p.move_right()
+			else:
+				p.stop_moving()
+
+			# Right stick aiming
+			if abs(self.joystick.get_axis(2)) > 0.1 or abs(self.joystick.get_axis(3)) > 0.1:
+				aim_x = p.pos.x + (self.joystick.get_axis(2) * 100)
+				aim_y = p.pos.y + (self.joystick.get_axis(3) * 100)
 
 		# Powerup events
 		hits = pygame.sprite.spritecollide(p,gamer.powerups,False)
@@ -177,6 +219,9 @@ class Game:
 			powerup.kill()
 
 	def events(self):
+		# Check for joystick connection
+		joystick_connected = pygame.joystick.get_count() > 0
+
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				if self.playing:
@@ -184,22 +229,29 @@ class Game:
 				self.running = False
 				pygame.quit()
 				quit()
-			if event.type == pygame.KEYDOWN:
-				if not p.dead:
-					if event.key == pygame.K_SPACE:
-						jump_sound.play()
-						p.jump()
-			if event.type == pygame.MOUSEBUTTONDOWN:
-				if event.button == 1:
-					if not p.dead:
-						b = p.shoot(pygame.mouse.get_pos())
+
+			# Always process joystick events if connected
+			if joystick_connected and event.type == pygame.JOYBUTTONDOWN and not p.dead:
+				if event.button == 0:  # A button (Xbox) / Cross (PS)
+					p.jump()
+					jump_sound.play()
+				if event.button == 1:  # B button (shoot)
+					x_axis = self.joystick.get_axis(2)
+					y_axis = self.joystick.get_axis(3)
+					if abs(x_axis) > 0.1 or abs(y_axis) > 0.1:
+						aim_x = p.pos.x + x_axis * 100
+						aim_y = p.pos.y + y_axis * 100
+						b = p.shoot((aim_x,aim_y))
 						self.all_sprites.add(b)
 						self.bullets.add(b)
-
+				if event.button == 2:  # X button (Xbox) / Square (PS)
+					self.playing = False
+					return "restart"
+				if event.button == 3:  # Y button (Xbox) / Triangle (PS)
+					p.drop()
 
 	def draw(self):
-		# Draw sprites and background on the screen
-		self.screen.fill(GREEN)
+		self.screen.fill(BLACK)
 		self.grounds.draw(self.screen)
 		self.bg_sprite.draw(self.screen)
 		self.player_sprite.draw(self.screen)
@@ -210,35 +262,83 @@ class Game:
 		self.tanks.draw(self.screen)
 		self.bosses.draw(self.screen)
 		self.powerups.draw(self.screen)
-		pygame.draw.rect(self.screen,SEA_BLUE,(0,437,6767,100))
+		pygame.draw.rect(self.screen,SEA_BLUE,(0,1000,15000,100))
 		self.death_anims.draw(self.screen)
 		pygame.display.update()
 
 	def draw_text(self, text, size, x, y):
 		font_name = pygame.font.match_font('Times')
 		font = pygame.font.Font(font_name, size)
-		text_surface = font.render(text,True, RED)
+		text_surface = font.render(text, True, RED)
 		text_rect = text_surface.get_rect()
-		text_rect.center = (x,y)
-		self.screen.blit(text_surface,text_rect)
+		text_rect.center = (x, y)
+		self.screen.blit(text_surface, text_rect)
 		pygame.display.update()
 
 	def show_start_screen(self):
+		# Initial position - start off screen to the right
+		menu_x = WIDTH
+		target_x = (WIDTH - ss_background.get_width()) // 2
+		menu_y = (HEIGHT - ss_background.get_height()) // 2
+
+		# Animation parameters
+		animation_speed = 15
+		animation_complete = False
+
+		# Wait until animation is complete before accepting input
+		while not animation_complete:
+			# Clear screen
+			self.screen.fill(BLACK)
+
+			# Update menu position
+			if menu_x > target_x:
+				menu_x -= animation_speed
+				if menu_x <= target_x:
+					menu_x = target_x
+					animation_complete = True
+					menu_sound.play()
+
+			# Draw menu at current position
+			self.screen.blit(ss_background, (menu_x, menu_y))
+			pygame.display.flip()
+			self.clock.tick(FPS)
+
+			# Process events but ignore input during animation
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					pygame.quit()
+					quit()
+
+		# Now wait for user input
 		waiting_for_start = True
 		while waiting_for_start:
-			self.screen.blit(ss_background,ss_background.get_rect())
+			self.screen.blit(ss_background, (target_x, menu_y))
 			pygame.display.update()
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					waiting_for_start = False
 					pygame.quit()
 					quit()
-				if event.type == pygame.KEYDOWN:
-					if event.key == pygame.K_SPACE:
+				if event.type == pygame.JOYBUTTONDOWN:
+					if event.button == 0:
 						waiting_for_start = False
 
 	def show_game_over_screen(self):
-		text_to_display = "Game Over"
+		waiting_for_die = True
+		joystick_connected = pygame.joystick.get_count() > 0
+
+		while waiting_for_die:
+			self.screen.blit(game_over,game_over.get_rect())
+			pygame.display.update()
+			for event in pygame.event.get():
+				if joystick_connected and event.type == pygame.JOYBUTTONDOWN:
+					if event.button == 1:
+						return "restart"
+					if event.button == 0:
+						self.running = False
+						pygame.quit()
+						quit()
+
 		if not self.bosses:
 			text_to_display = "STAGE CLEAR ("+str(int(self.time/FPS))+" s)"
 		pygame.draw.rect(self.screen,WHITE,(WIDTH/2, HEIGHT/2 - 35, 200,50))
@@ -247,12 +347,9 @@ class Game:
 
 # init game
 gamer = Game()
-
-
 gamer.show_start_screen()
-
-
 gamer.running = True
+
 while gamer.running:
 	# pygame.mixer.music.play(loops = -1)
 	# init player
@@ -309,19 +406,10 @@ while gamer.running:
 	gamer.all_sprites.add(h)
 	# Start a new game
 	gamer.run()
-	gamer.show_game_over_screen()
-	waiting_for_quit_or_restart = True
-	while waiting_for_quit_or_restart:
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				waiting_for_quit_or_restart = False
-				gamer.running = False
-			if event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_q:
-					waiting_for_quit_or_restart = False
-					gamer.running = False
-				if event.key == pygame.K_r:
-					waiting_for_quit_or_restart = False
+	result = gamer.show_game_over_screen()
+	if result == "restart":
+		continue
+	else:
+		break
 
 pygame.quit()
-
