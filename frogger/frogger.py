@@ -685,6 +685,8 @@ def run_frogger():
             if event.type == pygame.JOYBUTTONDOWN:
                 if joystick.get_button(2):  # START
                     run = False  # Vuelve al menú principal
+                    pygame.mixer.music.stop()
+                    trilha_sound.stop()
                     return
                 else:
                     gameInit = 1  # Cualquier otro botón inicia el juego   
@@ -741,6 +743,8 @@ def run_frogger():
                 if event.type == pygame.JOYBUTTONDOWN:
                     if joystick.get_button(2):  # Botón START
                         run = False  # Vuelve al menú principal
+                        pygame.mixer.music.stop()
+                        trilha_sound.stop()
                         return
 
                 # Detectar si el D-pad del mando se mueve
@@ -841,6 +845,8 @@ def run_frogger():
                 gameInit = 0  # Reiniciar el juego
             elif joystick.get_button(2):  # Botón START
                 run = False
+                pygame.mixer.music.stop()
+                trilha_sound.stop()
                 return
 
             # Dibujar la pantalla de "GAME OVER"
