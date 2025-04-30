@@ -4,6 +4,7 @@ import subprocess
 import os
 import Donkey_Kong.game_mk
 import frogger.frogger
+import Tetris.main
 
 # Inicialización de Pygame
 pygame.init()
@@ -124,13 +125,14 @@ def handle_input():
                 elif selected_index == 1:
                     Donkey_Kong.game_mk.run_mk()
                 elif selected_index == 2:
-                    game_path = os.path.join(os.path.dirname(__file__),  'Tetris', 'main.py')
-                    subprocess.Popen(['python', game_path])
+                    Tetris.main.tetris_play()
                 elif selected_index == 3:
                     game_path = os.path.join(os.path.dirname(__file__),  'FinalContra', 'main.py')
                     subprocess.Popen(['python', game_path])
                 
-
+                if selected_index != 1:
+                    pygame.quit()
+                    sys.exit()
 
 # Ciclo principal
 def main():
