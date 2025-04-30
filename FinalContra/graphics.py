@@ -31,6 +31,7 @@ screen = pygame.display.set_mode(windowSize)
 # Start Screen Background ####################################
 
 ss_background = pygame.image.load(os.path.join(imgFolder,'start.jpg')).convert()
+ss_press_play = pygame.image.load(os.path.join(imgFolder,'press_play.png')).convert()
 
 # Background image ###########################################
 
@@ -130,5 +131,6 @@ hit_sound = pygame.mixer.Sound(os.path.join(soundFolder, 'Hit.wav'))
 jump_sound = pygame.mixer.Sound(os.path.join(soundFolder, 'Jump.wav'))
 dash_sound = pygame.mixer.Sound(os.path.join(soundFolder, 'Dash.wav'))
 menu_sound = pygame.mixer.Sound(os.path.join(soundFolder, 'menu.wav'))
-#game_sound = pygame.mixer.Sound(os.path.join(soundFolder, 'game.wav'))
+game_sound = pygame.mixer.Sound(os.path.join(soundFolder, 'game.mp3'))
+over_sound = pygame.mixer.Sound(os.path.join(soundFolder, 'over.mp3'))
 pygame.mixer.music.set_volume(1)
