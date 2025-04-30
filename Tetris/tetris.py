@@ -354,6 +354,8 @@ def tetris_play():
 
     def get_font(size): 
         return pygame.font.Font(current_dir + "/assets/font.ttf", size)
+	
+    run = True
 
     def easy():
         score_surface = get_font(17).render("Score", True, Colors.white)
@@ -374,7 +376,7 @@ def tetris_play():
 
         selected_option = 0  # 0 = Start Over, 1 = Quit
 
-        while True:                                  
+        while run:                                  
             mouse_pos = pygame.mouse.get_pos()
             screen.fill(Colors.dark_blue)
             screen.blit(score_surface, (1243,160,50,50))
@@ -476,7 +478,7 @@ def tetris_play():
 
         selected_option = 0  # 0 = Start Over, 1 = Quit
 
-        while True:                                  
+        while run:                                  
             mouse_pos = pygame.mouse.get_pos()
             screen.fill(Colors.dark_blue)
             screen.blit(score_surface, (1243,160,50,50))
@@ -578,7 +580,7 @@ def tetris_play():
 
         selected_option = 0  # 0 = Start Over, 1 = Quit
 
-        while True:                                  
+        while run:                                  
             mouse_pos = pygame.mouse.get_pos()
             screen.fill(Colors.dark_blue)
             screen.blit(score_surface, (1243,160,50,50))
@@ -665,7 +667,7 @@ def tetris_play():
         selected_index = 0  # 0 = EASY, 1 = MEDIUM, 2 = HARD, 3 = EXIT
         options = ["EASY", "MEDIUM", "HARD", "EXIT"]
 
-        while True:
+        while run:
             screen.blit(BG, (0, 0))
             menu_surface = get_font(120).render("TETRIS", True, "#b68f40")
             menu_rect = menu_surface.get_rect(center=(950, 200))
@@ -725,6 +727,7 @@ def tetris_play():
                         elif selected_index == 2:
                             hard()
                         elif selected_index == 3:
+                            run = False
                             main.main()
 
             pygame.display.update()
