@@ -4,7 +4,7 @@ import subprocess
 import os
 import Donkey_Kong.game_mk
 import frogger.frogger
-import Tetris.main
+import Tetris.tetris
 import FinalContra.game
 
 
@@ -127,7 +127,7 @@ def handle_input():
                 elif selected_index == 1:
                     Donkey_Kong.game_mk.run_mk()
                 elif selected_index == 2:
-                    Tetris.main.tetris_play()
+                    Tetris.tetris.tetris_play()
                 elif selected_index == 3:
                     FinalContra.game.run_fc()
                 
