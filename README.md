@@ -12,5 +12,5 @@ Contra NES | afrenchman
 Tetris | jennasannguyen
 Frogger | Said Castro Ortiz (koletix)
 
-To run this games >>python main.py
+To run this games: >>python main.py
 
