@@ -15,7 +15,7 @@ D-Pad Up | Move Up
 D-Pad Down | Move Down
 D-Pad Left | Move Left
 D-Pad Right | Move Right
-START Button | Exit to main menu
+X Button | Exit to main menu
 A Button | Restart after Game Over
 
 ## Features
