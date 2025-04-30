@@ -1259,10 +1259,9 @@ def run_fc():
 			game_sound.stop()
 			over_sound.play()
 			waiting_for_die = True
-			run = True
 			joystick_connected = pygame.joystick.get_count() > 0
 
-			while waiting_for_die and run:
+			while waiting_for_die:
 				self.screen.blit(game_over,game_over.get_rect())
 				pygame.display.update()
 				for event in pygame.event.get():
@@ -1273,8 +1272,7 @@ def run_fc():
 							return "restart"
 						if event.button == 0:
 							self.running = False
-							run = False
-							return
+							pygame.quit()
 
 			if not self.bosses:
 				text_to_display = "STAGE CLEAR ("+str(int(self.time/FPS))+" s)"
@@ -1297,7 +1295,6 @@ def run_fc():
 		gamer.reinit()
 		gamer.player_sprite.add(p)
 		gamer.all_sprites.add(p)
-
 
 		# init level
 		for ground in LEVEL_1:
@@ -1350,7 +1347,8 @@ def run_fc():
 		if result == "restart":
 			continue
 		else:
-			break
+			gamer.running = False
+			return
 
 if __name__ == "__main__":
 	os.environ['SDL_VIDEO_CENTERED'] = '1'
